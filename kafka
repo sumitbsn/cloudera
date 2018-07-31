@@ -1,0 +1,29 @@
+1) Fill in "Source Brokers List" --> "nameOfClouderaKafkaBrokerServer.yourdomain.com:9092". This is the Server (or Servers) where you configured the Kafka Broker (NOT the MirrorMaker).
+
+ 
+
+2) Fill in "Destination Brokers List" --> "nameOfRemoteBrokerServer.otherdomain.com:9092". This is supposed to be a remote Cluster that will receive Topics sent over by your MirrorMaker. If you have one, put in that one. Otherwise just put in another Server in your network, whatever Server.
+
+ 
+
+Please note that both this Server Names must be FQDN and resolvable by your DNS (or hosts file), otherwise you'll get other errors. Also the format with the trailing Port Number is mandatory!
+
+ 
+
+3) Click "Continue". Service will NOT start (error). Do not navigate away from that screen
+
+ 
+
+4) Open another Cloudera Manager in another browser pane. You should now see "Kafka" in the list of Services (red, but it should be there). Click on the Kafka Service and then "Configure".
+
+ 
+
+5) Search for the "java heap space" Configuration Property. The standard Java Heap Space you'll find already set up should be 50 MBytes. Put in at least 256 MBytes. The original value is simply not enough.
+
+ 
+
+6) Now search for the "whitelist" Configuration Property. In the field, put in "(?!x)x" (without the quotation marks). That's a regular expression that does not match anything. Given that apparently a Whitelist is mandatory for the Mirrormaker Service to start, and I'm assuming you don't want to replicate any topics remotely right now, just put in something that won't replicate anything e.g. that regular expression.
+
+ 
+
+7) Save the changes and go back to the original Configuration Screen on the othe browser pane. Click "Retry", or wathever, or even exit that screen and manually restart the Kafka Service in Cloudera Manager.
